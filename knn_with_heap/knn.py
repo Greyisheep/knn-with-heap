@@ -19,16 +19,17 @@ class KNN:
                 distance = sqrt(sum((px - dx) ** 2 for px, dx in zip(point, data_point)))
                 # Insert (distance, label) into the heap
                 heap.insert((distance, label))
-                # Maintain only k elements in the heap (largest distances are removed)
+                # Maintain only k elements in the heap (remove the largest distances)
                 if len(heap.heap) > self.k:
-                    heap.delete_min()
-
+                    heap.heap.sort(reverse=True)  # Ensure the largest distance is at the end
+                    heap.heap.pop()  # Remove the largest distance
+            
             # Collect the k nearest labels
             k_nearest = []
             while len(heap.heap) > 0:
                 k_nearest.append(heap.delete_min()[1])
             
-            # Debug: Print the k-nearest neighbors
+            # Debug: Print the k-nearest neighbors and distances
             print(f"K-nearest neighbors for point {point}: {k_nearest}")
             
             # Determine the most common label
