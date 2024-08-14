@@ -1,41 +1,74 @@
+"""
+A MinHeap implementation for storing elements as tuples (priority, value).
+"""
+
 class MinHeap:
+    """
+    MinHeap class for efficient priority queue operations.
+    """
+
     def __init__(self):
+        """
+        Initializes an empty MinHeap.
+        """
         self.heap = []
 
-    def insert(self, value):
-        self.heap.append(value)
-        self._bubble_up(len(self.heap) - 1)
+    def insert(self, element):
+        """
+        Inserts an element into the MinHeap.
+
+        Args:
+            element: A tuple (priority, value) to be inserted.
+        """
+        self.heap.append(element)
+        self._heapify_up(len(self.heap) - 1)
 
     def delete_min(self):
-        if len(self.heap) == 0:
+        """
+        Removes and returns the minimum element from the MinHeap.
+
+        Returns:
+            The minimum element (tuple) or None if the heap is empty.
+        """
+        if not self.heap:
             return None
         if len(self.heap) == 1:
             return self.heap.pop()
-        min_value = self.heap[0]
+        min_element = self.heap[0]
         self.heap[0] = self.heap.pop()
-        self._bubble_down(0)
-        return min_value
+        self._heapify_down(0)
+        return min_element
 
-    def peek_min(self):
-        if len(self.heap) == 0:
-            return None
-        return self.heap[0]
+    def _heapify_up(self, index):
+        """
+        Maintains the heap property by moving an element up the heap.
 
-    def _bubble_up(self, index):
+        Args:
+            index: The index of the element to be heapified up.
+        """
         parent_index = (index - 1) // 2
-        if index > 0 and self.heap[index] < self.heap[parent_index]:
+        if parent_index >= 0 and self.heap[index][0] < self.heap[parent_index][0]:
             self.heap[index], self.heap[parent_index] = self.heap[parent_index], self.heap[index]
-            self._bubble_up(parent_index)
+            self._heapify_up(parent_index)
 
-    def _bubble_down(self, index):
-        smallest = index
+    def _heapify_down(self, index):
+        """
+        Maintains the heap property by moving an element down the heap.
+
+        Args:
+            index: The index of the element to be heapified down.
+        """
+        n = len(self.heap)
         left_child = 2 * index + 1
         right_child = 2 * index + 2
+        smallest = index
 
-        if left_child < len(self.heap) and self.heap[left_child] < self.heap[smallest]:
+        if left_child < n and self.heap[left_child][0] < self.heap[smallest][0]:
             smallest = left_child
-        if right_child < len(self.heap) and self.heap[right_child] < self.heap[smallest]:
+
+        if right_child < n and self.heap[right_child][0] < self.heap[smallest][0]:
             smallest = right_child
+
         if smallest != index:
             self.heap[index], self.heap[smallest] = self.heap[smallest], self.heap[index]
-            self._bubble_down(smallest)
+            self._heapify_down(smallest)
